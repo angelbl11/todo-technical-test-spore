@@ -24,8 +24,10 @@
 	<string>$(FLUTTER_BUILD_NUMBER)</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>Esta aplicación necesita acceso a la galería para seleccionar imágenes</string>
 	<key>NSMicrophoneUsageDescription</key>
-	<string>Esta aplicación necesita acceso al micrófono para convertir tu voz en texto</string>
+	<string>Esta aplicación necesita acceso al micrófono para grabar audio</string>
 	<key>NSSpeechRecognitionUsageDescription</key>
 	<string>Esta aplicación necesita acceso al reconocimiento de voz para convertir tu voz en texto</string>
 	<key>UILaunchStoryboardName</key>
@@ -45,9 +47,15 @@
 		<string>UIInterfaceOrientationLandscapeLeft</string>
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
+	<key>UIViewControllerBasedStatusBarAppearance</key>
+	<false/>
 	<key>CADisableMinimumFrameDurationOnPhone</key>
 	<true/>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
+	<true/>
+	<key>LSSupportsOpeningDocumentsInPlace</key>
+	<true/>
+	<key>UIFileSharingEnabled</key>
 	<true/>
 </dict>
 </plist>

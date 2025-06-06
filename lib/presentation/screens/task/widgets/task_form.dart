@@ -6,6 +6,7 @@ import 'package:todo_list_technical_test/presentation/screens/task/widgets/descr
 import 'package:todo_list_technical_test/presentation/screens/task/widgets/due_date_field.dart';
 import 'package:todo_list_technical_test/presentation/screens/task/widgets/priority_field.dart';
 import 'package:todo_list_technical_test/presentation/screens/task/widgets/title_field.dart';
+import 'package:todo_list_technical_test/presentation/screens/task/widgets/attachments_field.dart';
 
 class TaskFormWidget extends ConsumerStatefulWidget {
   final GlobalKey<FormState> formKey;
@@ -46,42 +47,50 @@ class _TaskFormWidgetState extends ConsumerState<TaskFormWidget> {
 
     return Form(
       key: widget.formKey,
-      child: SingleChildScrollView(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            TitleField(controller: _titleController),
-            const SizedBox(height: 16),
-            DescriptionField(controller: _descriptionController),
-            const SizedBox(height: 16),
-            const PriorityField(),
-            const SizedBox(height: 16),
-            const DueDateField(),
-            const SizedBox(height: 16),
-            SwitchListTile(
-              value: formState.isCompleted,
-              onChanged: notifier.updateIsCompleted,
-              title: Text(
-                formState.isCompleted ? 'Completada' : 'Pendiente',
-                style: AppTheme.bodyMedium,
+      child: GestureDetector(
+        onTap: () => FocusScope.of(context).unfocus(),
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              TitleField(controller: _titleController),
+              const SizedBox(height: 16),
+              DescriptionField(controller: _descriptionController),
+              const SizedBox(height: 16),
+              const PriorityField(),
+              const SizedBox(height: 16),
+              const DueDateField(),
+              const SizedBox(height: 16),
+              AttachmentsField(
+                attachments: formState.attachments,
+                onAttachmentsChanged: notifier.updateAttachments,
               ),
-              contentPadding: EdgeInsets.zero,
-            ),
-            const SizedBox(height: 24),
-            ElevatedButton(
-              onPressed: widget.onSave,
-              style: ElevatedButton.styleFrom(
-                minimumSize: const Size.fromHeight(50),
-                backgroundColor: Theme.of(context).colorScheme.primary,
-                foregroundColor: Theme.of(context).colorScheme.onPrimary,
+              const SizedBox(height: 16),
+              SwitchListTile(
+                value: formState.isCompleted,
+                onChanged: notifier.updateIsCompleted,
+                title: Text(
+                  formState.isCompleted ? 'Completada' : 'Pendiente',
+                  style: AppTheme.bodyMedium,
+                ),
+                contentPadding: EdgeInsets.zero,
               ),
-              child: Text(
-                'Guardar cambios',
-                style: AppTheme.labelLarge,
+              const SizedBox(height: 24),
+              ElevatedButton(
+                onPressed: widget.onSave,
+                style: ElevatedButton.styleFrom(
+                  minimumSize: const Size.fromHeight(50),
+                  backgroundColor: Theme.of(context).colorScheme.primary,
+                  foregroundColor: Theme.of(context).colorScheme.onPrimary,
+                ),
+                child: Text(
+                  'Guardar cambios',
+                  style: AppTheme.labelLarge,
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

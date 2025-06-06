@@ -8,7 +8,7 @@ part of 'priority.dart';
 
 class PriorityAdapter extends TypeAdapter<Priority> {
   @override
-  final int typeId = 1;
+  final int typeId = 3;
 
   @override
   Priority read(BinaryReader reader) {

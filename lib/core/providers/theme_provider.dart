@@ -6,19 +6,15 @@ part 'theme_provider.g.dart';
 
 @riverpod
 class AppThemeMode extends _$AppThemeMode {
-  static const _themeBoxName = 'theme_box';
-  static const _themeKey = 'theme_mode';
-
   @override
   ThemeMode build() {
-    final box = Hive.box(_themeBoxName);
-    return box.get(_themeKey, defaultValue: ThemeMode.light) as ThemeMode;
+    final box = Hive.box<ThemeMode>('theme_box');
+    return box.get('theme_mode') ?? ThemeMode.system;
   }
 
-  void toggle() {
-    final newMode = state == ThemeMode.light ? ThemeMode.dark : ThemeMode.light;
-    state = newMode;
-    final box = Hive.box(_themeBoxName);
-    box.put(_themeKey, newMode);
+  void setThemeMode(ThemeMode mode) {
+    final box = Hive.box<ThemeMode>('theme_box');
+    box.put('theme_mode', mode);
+    state = mode;
   }
 }

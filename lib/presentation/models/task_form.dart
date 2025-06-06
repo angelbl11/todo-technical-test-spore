@@ -1,6 +1,7 @@
 import 'package:formz/formz.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:todo_list_technical_test/presentation/providers/priority.dart';
+import 'package:todo_list_technical_test/presentation/providers/todo.dart';
 
 part 'task_form.freezed.dart';
 
@@ -23,8 +24,9 @@ class DescriptionInput extends FormzInput<String, String> {
   @override
   String? validator(String value) {
     if (value.isEmpty) return 'La descripción es requerida';
-    if (value.length < 10)
+    if (value.length < 10) {
       return 'La descripción debe tener al menos 10 caracteres';
+    }
     return null;
   }
 }
@@ -45,6 +47,7 @@ class TaskForm with _$TaskForm {
     required Priority priority,
     required DateTime dueDate,
     required bool isCompleted,
+    @Default([]) List<Attachment> attachments,
   }) = _TaskForm;
 
   factory TaskForm.initial({
@@ -53,6 +56,7 @@ class TaskForm with _$TaskForm {
     Priority priority = Priority.medium,
     DateTime? dueDate,
     bool isCompleted = false,
+    List<Attachment> attachments = const [],
   }) {
     return TaskForm(
       title: TitleInput.dirty(title),
@@ -60,11 +64,11 @@ class TaskForm with _$TaskForm {
       priority: priority,
       dueDate: dueDate ?? DateTime.now().add(const Duration(days: 1)),
       isCompleted: isCompleted,
+      attachments: attachments,
     );
   }
 }
 
 extension TaskFormX on TaskForm {
-  bool get isValid =>
-      Formz.validate([title, description]) == FormzSubmissionStatus.success;
+  bool get isValid => title.isValid && description.isValid;
 }

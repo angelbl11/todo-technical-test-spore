@@ -8,6 +8,7 @@ Una aplicación Flutter para gestionar tareas y elementos pendientes, construida
 
 - Flutter SDK (versión 3.27.0)
 - Dart SDK (versión 3.8.1 o superior)
+- Java Development Kit (JDK 21)
 - Android Studio / VS Code con extensiones de Flutter
 - Git
 
@@ -117,6 +118,22 @@ O directamente con Flutter:
 ```bash
 flutter test
 ```
+
+### Configuración del Entorno
+
+1. Asegúrate de tener Java 21 instalado y configurado en tu sistema:
+
+   ```bash
+   java -version
+   ```
+
+2. Configura la variable de entorno JAVA_HOME apuntando a tu instalación de Java 21:
+
+   ```bash
+   export JAVA_HOME=/path/to/java21
+   ```
+
+3. Para desarrollo en Android, asegúrate de que tu Android SDK esté configurado correctamente en Android Studio.
 
 ## 📱 Características
 

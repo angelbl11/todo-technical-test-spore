@@ -48,9 +48,6 @@ class SpeechService {
           }
         },
         localeId: 'es_ES',
-        listenMode: ListenMode.confirmation,
-        partialResults: true,
-        onDevice: true,
       );
       _isListening = true;
       return true;

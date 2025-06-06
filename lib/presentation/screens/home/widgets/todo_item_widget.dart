@@ -36,6 +36,7 @@ class TodoItemWidget extends ConsumerWidget {
       ),
       confirmDismiss: (direction) async {
         if (direction == DismissDirection.endToStart) {
+          onDelete();
           return true;
         } else {
           await Navigator.push(
@@ -48,11 +49,7 @@ class TodoItemWidget extends ConsumerWidget {
           return false;
         }
       },
-      onDismissed: (direction) {
-        if (direction == DismissDirection.endToStart) {
-          onDelete();
-        }
-      },
+      onDismissed: (direction) {},
       child: Card(
         margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
         child: InkWell(

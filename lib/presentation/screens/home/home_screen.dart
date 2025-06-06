@@ -62,6 +62,11 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     await ref.read(todoNotifierProvider.notifier).build();
   }
 
+  Future<void> _handleDelete(String id) async {
+    await ref.read(todoNotifierProvider.notifier).deleteTodo(id);
+    await ref.read(todoNotifierProvider.notifier).build();
+  }
+
   List<Todo> _filterAndSortTodos(List<Todo> todos) {
     var filteredTodos = todos.where((todo) {
       final matchesSearch =
@@ -114,7 +119,12 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                       : Icons.light_mode,
                 ),
                 onPressed: () {
-                  ref.read(appThemeModeProvider.notifier).toggle();
+                  final currentMode = ref.read(appThemeModeProvider);
+                  ref.read(appThemeModeProvider.notifier).setThemeMode(
+                        currentMode == ThemeMode.light
+                            ? ThemeMode.dark
+                            : ThemeMode.light,
+                      );
                 },
               );
             },
@@ -155,9 +165,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                         onToggle: () => ref
                             .read(todoNotifierProvider.notifier)
                             .toggleTodoCompletion(todo.id),
-                        onDelete: () => ref
-                            .read(todoNotifierProvider.notifier)
-                            .deleteTodo(todo.id),
+                        onDelete: () => _handleDelete(todo.id),
                       );
                     },
                   ),

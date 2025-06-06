@@ -52,6 +52,7 @@ class TodoNotifier extends _$TodoNotifier {
     required String description,
     required Priority priority,
     required DateTime dueDate,
+    List<Attachment> attachments = const [],
   }) async {
     state = AsyncValue.data(state.value!.copyWith(isLoading: true));
     try {
@@ -63,6 +64,7 @@ class TodoNotifier extends _$TodoNotifier {
         isCompleted: false,
         createdAt: DateTime.now(),
         dueDate: dueDate,
+        attachments: attachments,
       );
 
       await _todoBox.put(todo.id, TodoHiveModel.fromTodo(todo));
@@ -89,10 +91,17 @@ class TodoNotifier extends _$TodoNotifier {
   }
 
   Future<void> deleteTodo(String id) async {
-    state = AsyncValue.data(state.value!.copyWith(isLoading: true));
     try {
+      state = AsyncValue.data(state.value!.copyWith(isLoading: true));
       await _todoBox.delete(id);
-      await _updateState();
+
+      // Actualizar el estado inmediatamente después de eliminar
+      final updatedTodos =
+          state.value!.todos.where((todo) => todo.id != id).toList();
+      state = AsyncValue.data(state.value!.copyWith(
+        todos: updatedTodos,
+        isLoading: false,
+      ));
     } catch (e) {
       state = AsyncValue.data(state.value!.copyWith(
         isLoading: false,

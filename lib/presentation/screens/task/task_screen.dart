@@ -43,6 +43,12 @@ class _TaskScreenState extends ConsumerState<TaskScreen> {
         try {
           await ref.read(todoNotifierProvider.notifier).updateTodo(updatedTodo);
           if (mounted) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(
+                content: Text('Tarea actualizada correctamente'),
+                backgroundColor: Colors.green,
+              ),
+            );
             Navigator.pop(context, true);
           }
         } catch (e) {

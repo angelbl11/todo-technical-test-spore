@@ -21,6 +21,7 @@ mixin _$TaskForm {
   Priority get priority => throw _privateConstructorUsedError;
   DateTime get dueDate => throw _privateConstructorUsedError;
   bool get isCompleted => throw _privateConstructorUsedError;
+  List<Attachment> get attachments => throw _privateConstructorUsedError;
 
   /// Create a copy of TaskForm
   /// with the given fields replaced by the non-null parameter values.
@@ -39,7 +40,8 @@ abstract class $TaskFormCopyWith<$Res> {
       DescriptionInput description,
       Priority priority,
       DateTime dueDate,
-      bool isCompleted});
+      bool isCompleted,
+      List<Attachment> attachments});
 }
 
 /// @nodoc
@@ -62,6 +64,7 @@ class _$TaskFormCopyWithImpl<$Res, $Val extends TaskForm>
     Object? priority = null,
     Object? dueDate = null,
     Object? isCompleted = null,
+    Object? attachments = null,
   }) {
     return _then(_value.copyWith(
       title: null == title
@@ -84,6 +87,10 @@ class _$TaskFormCopyWithImpl<$Res, $Val extends TaskForm>
           ? _value.isCompleted
           : isCompleted // ignore: cast_nullable_to_non_nullable
               as bool,
+      attachments: null == attachments
+          ? _value.attachments
+          : attachments // ignore: cast_nullable_to_non_nullable
+              as List<Attachment>,
     ) as $Val);
   }
 }
@@ -101,7 +108,8 @@ abstract class _$$TaskFormImplCopyWith<$Res>
       DescriptionInput description,
       Priority priority,
       DateTime dueDate,
-      bool isCompleted});
+      bool isCompleted,
+      List<Attachment> attachments});
 }
 
 /// @nodoc
@@ -122,6 +130,7 @@ class __$$TaskFormImplCopyWithImpl<$Res>
     Object? priority = null,
     Object? dueDate = null,
     Object? isCompleted = null,
+    Object? attachments = null,
   }) {
     return _then(_$TaskFormImpl(
       title: null == title
@@ -144,6 +153,10 @@ class __$$TaskFormImplCopyWithImpl<$Res>
           ? _value.isCompleted
           : isCompleted // ignore: cast_nullable_to_non_nullable
               as bool,
+      attachments: null == attachments
+          ? _value._attachments
+          : attachments // ignore: cast_nullable_to_non_nullable
+              as List<Attachment>,
     ));
   }
 }
@@ -156,7 +169,9 @@ class _$TaskFormImpl implements _TaskForm {
       required this.description,
       required this.priority,
       required this.dueDate,
-      required this.isCompleted});
+      required this.isCompleted,
+      final List<Attachment> attachments = const []})
+      : _attachments = attachments;
 
   @override
   final TitleInput title;
@@ -168,10 +183,18 @@ class _$TaskFormImpl implements _TaskForm {
   final DateTime dueDate;
   @override
   final bool isCompleted;
+  final List<Attachment> _attachments;
+  @override
+  @JsonKey()
+  List<Attachment> get attachments {
+    if (_attachments is EqualUnmodifiableListView) return _attachments;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(_attachments);
+  }
 
   @override
   String toString() {
-    return 'TaskForm(title: $title, description: $description, priority: $priority, dueDate: $dueDate, isCompleted: $isCompleted)';
+    return 'TaskForm(title: $title, description: $description, priority: $priority, dueDate: $dueDate, isCompleted: $isCompleted, attachments: $attachments)';
   }
 
   @override
@@ -186,12 +209,14 @@ class _$TaskFormImpl implements _TaskForm {
                 other.priority == priority) &&
             (identical(other.dueDate, dueDate) || other.dueDate == dueDate) &&
             (identical(other.isCompleted, isCompleted) ||
-                other.isCompleted == isCompleted));
+                other.isCompleted == isCompleted) &&
+            const DeepCollectionEquality()
+                .equals(other._attachments, _attachments));
   }
 
   @override
-  int get hashCode => Object.hash(
-      runtimeType, title, description, priority, dueDate, isCompleted);
+  int get hashCode => Object.hash(runtimeType, title, description, priority,
+      dueDate, isCompleted, const DeepCollectionEquality().hash(_attachments));
 
   /// Create a copy of TaskForm
   /// with the given fields replaced by the non-null parameter values.
@@ -208,7 +233,8 @@ abstract class _TaskForm implements TaskForm {
       required final DescriptionInput description,
       required final Priority priority,
       required final DateTime dueDate,
-      required final bool isCompleted}) = _$TaskFormImpl;
+      required final bool isCompleted,
+      final List<Attachment> attachments}) = _$TaskFormImpl;
 
   @override
   TitleInput get title;
@@ -220,6 +246,8 @@ abstract class _TaskForm implements TaskForm {
   DateTime get dueDate;
   @override
   bool get isCompleted;
+  @override
+  List<Attachment> get attachments;
 
   /// Create a copy of TaskForm
   /// with the given fields replaced by the non-null parameter values.

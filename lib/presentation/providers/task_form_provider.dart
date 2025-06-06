@@ -1,4 +1,3 @@
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:formz/formz.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:todo_list_technical_test/presentation/models/task_form.dart';
@@ -34,6 +33,10 @@ class TaskFormNotifier extends _$TaskFormNotifier {
     state = state.copyWith(isCompleted: value);
   }
 
+  void updateAttachments(List<Attachment> attachments) {
+    state = state.copyWith(attachments: attachments);
+  }
+
   void initializeWithTodo(Todo todo) {
     state = TaskForm.initial(
       title: todo.title,
@@ -41,6 +44,7 @@ class TaskFormNotifier extends _$TaskFormNotifier {
       priority: todo.priority,
       dueDate: todo.dueDate,
       isCompleted: todo.isCompleted,
+      attachments: todo.attachments,
     );
   }
 
@@ -55,6 +59,7 @@ class TaskFormNotifier extends _$TaskFormNotifier {
       dueDate: state.dueDate,
       isCompleted: state.isCompleted,
       createdAt: createdAt ?? DateTime.now(),
+      attachments: state.attachments,
     );
   }
 }
