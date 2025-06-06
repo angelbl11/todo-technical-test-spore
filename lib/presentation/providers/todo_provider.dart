@@ -31,6 +31,22 @@ class TodoNotifier extends _$TodoNotifier {
     }
   }
 
+  Future<void> _updateState() async {
+    try {
+      final updatedTodos =
+          _todoBox.values.map((hiveModel) => hiveModel.toTodo()).toList();
+      state = AsyncValue.data(state.value!.copyWith(
+        todos: updatedTodos,
+        isLoading: false,
+      ));
+    } catch (e) {
+      state = AsyncValue.data(state.value!.copyWith(
+        isLoading: false,
+        errorMessage: 'Error updating state: ${e.toString()}',
+      ));
+    }
+  }
+
   Future<void> addTodo({
     required String title,
     required String description,
@@ -50,12 +66,7 @@ class TodoNotifier extends _$TodoNotifier {
       );
 
       await _todoBox.put(todo.id, TodoHiveModel.fromTodo(todo));
-      final updatedTodos =
-          _todoBox.values.map((hiveModel) => hiveModel.toTodo()).toList();
-      state = AsyncValue.data(state.value!.copyWith(
-        todos: updatedTodos,
-        isLoading: false,
-      ));
+      await _updateState();
     } catch (e) {
       state = AsyncValue.data(state.value!.copyWith(
         isLoading: false,
@@ -68,12 +79,7 @@ class TodoNotifier extends _$TodoNotifier {
     state = AsyncValue.data(state.value!.copyWith(isLoading: true));
     try {
       await _todoBox.put(todo.id, TodoHiveModel.fromTodo(todo));
-      final updatedTodos =
-          _todoBox.values.map((hiveModel) => hiveModel.toTodo()).toList();
-      state = AsyncValue.data(state.value!.copyWith(
-        todos: updatedTodos,
-        isLoading: false,
-      ));
+      await _updateState();
     } catch (e) {
       state = AsyncValue.data(state.value!.copyWith(
         isLoading: false,
@@ -86,12 +92,7 @@ class TodoNotifier extends _$TodoNotifier {
     state = AsyncValue.data(state.value!.copyWith(isLoading: true));
     try {
       await _todoBox.delete(id);
-      final updatedTodos =
-          _todoBox.values.map((hiveModel) => hiveModel.toTodo()).toList();
-      state = AsyncValue.data(state.value!.copyWith(
-        todos: updatedTodos,
-        isLoading: false,
-      ));
+      await _updateState();
     } catch (e) {
       state = AsyncValue.data(state.value!.copyWith(
         isLoading: false,
@@ -108,12 +109,7 @@ class TodoNotifier extends _$TodoNotifier {
         final todo = todoHiveModel.toTodo();
         final updatedTodo = todo.copyWith(isCompleted: !todo.isCompleted);
         await _todoBox.put(id, TodoHiveModel.fromTodo(updatedTodo));
-        final updatedTodos =
-            _todoBox.values.map((hiveModel) => hiveModel.toTodo()).toList();
-        state = AsyncValue.data(state.value!.copyWith(
-          todos: updatedTodos,
-          isLoading: false,
-        ));
+        await _updateState();
       }
     } catch (e) {
       state = AsyncValue.data(state.value!.copyWith(

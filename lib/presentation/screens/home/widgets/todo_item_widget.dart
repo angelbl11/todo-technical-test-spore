@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:todo_list_technical_test/presentation/providers/todo.dart';
 import 'package:todo_list_technical_test/core/theme/app_theme.dart';
+import 'package:todo_list_technical_test/presentation/providers/todo_provider.dart';
 import 'package:todo_list_technical_test/presentation/screens/task/task_screen.dart';
 
-class TodoItemWidget extends StatelessWidget {
+class TodoItemWidget extends ConsumerWidget {
   final Todo todo;
   final VoidCallback onToggle;
   final VoidCallback onDelete;
@@ -16,7 +18,7 @@ class TodoItemWidget extends StatelessWidget {
   });
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return Dismissible(
       key: ValueKey(todo.id),
       direction: DismissDirection.endToStart,
@@ -30,13 +32,15 @@ class TodoItemWidget extends StatelessWidget {
       child: Card(
         margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
         child: InkWell(
-          onTap: () {
-            Navigator.push(
+          onTap: () async {
+            await Navigator.push(
               context,
               MaterialPageRoute(
                 builder: (context) => TaskScreen(todo: todo),
               ),
             );
+            // Recargar los datos cuando se regresa de la pantalla de edición
+            await ref.read(todoNotifierProvider.notifier).build();
           },
           child: ListTile(
             leading: Checkbox(
