@@ -140,7 +140,23 @@ class _AddTaskBottomSheetState extends ConsumerState<AddTaskBottomSheet> {
                     items: Priority.values.map((Priority priority) {
                       return DropdownMenuItem<Priority>(
                         value: priority,
-                        child: Text(priority.name.toUpperCase()),
+                        child: Row(
+                          children: [
+                            Container(
+                              width: 12,
+                              height: 12,
+                              decoration: BoxDecoration(
+                                color: priority.color,
+                                shape: BoxShape.circle,
+                              ),
+                            ),
+                            const SizedBox(width: 8),
+                            Text(
+                              priority.label,
+                              style: AppTheme.bodyMedium,
+                            ),
+                          ],
+                        ),
                       );
                     }).toList(),
                     onChanged: (Priority? newValue) {
@@ -155,11 +171,15 @@ class _AddTaskBottomSheetState extends ConsumerState<AddTaskBottomSheet> {
                   ListTile(
                     title: Text(
                       'Fecha de vencimiento',
-                      style: TextStyle(color: colorScheme.onSurface),
+                      style: AppTheme.titleMedium.copyWith(
+                        color: colorScheme.onSurface,
+                      ),
                     ),
                     subtitle: Text(
                       '${_dueDate.day}/${_dueDate.month}/${_dueDate.year}',
-                      style: TextStyle(color: colorScheme.onSurfaceVariant),
+                      style: AppTheme.bodyMedium.copyWith(
+                        color: colorScheme.onSurfaceVariant,
+                      ),
                     ),
                     trailing:
                         Icon(Icons.calendar_today, color: colorScheme.primary),
@@ -173,7 +193,10 @@ class _AddTaskBottomSheetState extends ConsumerState<AddTaskBottomSheet> {
                       backgroundColor: colorScheme.primary,
                       foregroundColor: colorScheme.onPrimary,
                     ),
-                    child: const Text('Guardar'),
+                    child: Text(
+                      'Guardar',
+                      style: AppTheme.labelLarge,
+                    ),
                   ),
                 ],
               ),

@@ -4,6 +4,7 @@ import 'package:todo_list_technical_test/presentation/models/task_form.dart';
 import 'package:todo_list_technical_test/presentation/providers/priority.dart';
 import 'package:todo_list_technical_test/presentation/providers/task_form_provider.dart';
 import 'package:todo_list_technical_test/presentation/widgets/custom_form_field.dart';
+import 'package:todo_list_technical_test/core/theme/app_theme.dart';
 
 class TaskFormWidget extends ConsumerStatefulWidget {
   final GlobalKey<FormState> formKey;
@@ -78,6 +79,7 @@ class _TaskFormWidgetState extends ConsumerState<TaskFormWidget> {
               validator: (value) => formState.title.errorMessage,
               builder: (context, value) => TextFormField(
                 controller: _titleController,
+                style: AppTheme.bodyMedium,
                 decoration: const InputDecoration(border: OutlineInputBorder()),
                 onChanged: notifier.updateTitle,
               ),
@@ -91,6 +93,7 @@ class _TaskFormWidgetState extends ConsumerState<TaskFormWidget> {
               validator: (value) => formState.description.errorMessage,
               builder: (context, value) => TextFormField(
                 controller: _descriptionController,
+                style: AppTheme.bodyMedium,
                 decoration: const InputDecoration(border: OutlineInputBorder()),
                 maxLines: 3,
                 onChanged: notifier.updateDescription,
@@ -106,7 +109,23 @@ class _TaskFormWidgetState extends ConsumerState<TaskFormWidget> {
               items: Priority.values
                   .map((priority) => DropdownMenuItem(
                         value: priority,
-                        child: Text(priority.name.toUpperCase()),
+                        child: Row(
+                          children: [
+                            Container(
+                              width: 12,
+                              height: 12,
+                              decoration: BoxDecoration(
+                                color: priority.color,
+                                shape: BoxShape.circle,
+                              ),
+                            ),
+                            const SizedBox(width: 8),
+                            Text(
+                              priority.label,
+                              style: AppTheme.bodyMedium,
+                            ),
+                          ],
+                        ),
                       ))
                   .toList(),
               onChanged: (value) =>
@@ -119,18 +138,35 @@ class _TaskFormWidgetState extends ConsumerState<TaskFormWidget> {
                 decoration: const InputDecoration(
                   labelText: 'Fecha de vencimiento',
                   border: OutlineInputBorder(),
-                  suffixIcon: Icon(Icons.calendar_today),
                 ),
                 child: Text(
-                    '${formState.dueDate.day}/${formState.dueDate.month}/${formState.dueDate.year}'),
+                  '${formState.dueDate.day}/${formState.dueDate.month}/${formState.dueDate.year}',
+                  style: AppTheme.bodyMedium,
+                ),
               ),
             ),
             const SizedBox(height: 16),
             SwitchListTile(
               value: formState.isCompleted,
               onChanged: notifier.updateIsCompleted,
-              title: Text(formState.isCompleted ? 'Completada' : 'Pendiente'),
+              title: Text(
+                formState.isCompleted ? 'Completada' : 'Pendiente',
+                style: AppTheme.bodyMedium,
+              ),
               contentPadding: EdgeInsets.zero,
+            ),
+            const SizedBox(height: 24),
+            ElevatedButton(
+              onPressed: widget.onSave,
+              style: ElevatedButton.styleFrom(
+                minimumSize: const Size.fromHeight(50),
+                backgroundColor: Theme.of(context).colorScheme.primary,
+                foregroundColor: Theme.of(context).colorScheme.onPrimary,
+              ),
+              child: Text(
+                'Guardar cambios',
+                style: AppTheme.labelLarge,
+              ),
             ),
           ],
         ),

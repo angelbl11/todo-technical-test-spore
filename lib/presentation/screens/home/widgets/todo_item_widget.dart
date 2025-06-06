@@ -21,14 +21,38 @@ class TodoItemWidget extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return Dismissible(
       key: ValueKey(todo.id),
-      direction: DismissDirection.endToStart,
+      direction: DismissDirection.horizontal,
       background: Container(
+        alignment: Alignment.centerLeft,
+        padding: const EdgeInsets.symmetric(horizontal: 20),
+        color: Colors.blue,
+        child: const Icon(Icons.edit, color: Colors.white),
+      ),
+      secondaryBackground: Container(
         alignment: Alignment.centerRight,
         padding: const EdgeInsets.symmetric(horizontal: 20),
         color: Colors.red,
         child: const Icon(Icons.delete, color: Colors.white),
       ),
-      onDismissed: (direction) => onDelete(),
+      confirmDismiss: (direction) async {
+        if (direction == DismissDirection.endToStart) {
+          return true;
+        } else {
+          await Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => TaskScreen(todo: todo),
+            ),
+          );
+          await ref.read(todoNotifierProvider.notifier).build();
+          return false;
+        }
+      },
+      onDismissed: (direction) {
+        if (direction == DismissDirection.endToStart) {
+          onDelete();
+        }
+      },
       child: Card(
         margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
         child: InkWell(
@@ -39,25 +63,58 @@ class TodoItemWidget extends ConsumerWidget {
                 builder: (context) => TaskScreen(todo: todo),
               ),
             );
-            // Recargar los datos cuando se regresa de la pantalla de edición
             await ref.read(todoNotifierProvider.notifier).build();
           },
-          child: ListTile(
-            leading: Checkbox(
-              value: todo.isCompleted,
-              onChanged: (_) => onToggle(),
-            ),
-            title: Text(
-              todo.title,
-              style: AppTheme.headlineMedium.copyWith(
-                decoration:
-                    todo.isCompleted ? TextDecoration.lineThrough : null,
+          child: Container(
+            decoration: BoxDecoration(
+              border: Border(
+                left: BorderSide(
+                  color: todo.priority.color,
+                  width: 4,
+                ),
               ),
             ),
-            subtitle: Text(todo.description),
-            trailing: IconButton(
-              icon: const Icon(Icons.delete, color: Colors.red),
-              onPressed: onDelete,
+            child: ListTile(
+              leading: Checkbox(
+                value: todo.isCompleted,
+                onChanged: (_) => onToggle(),
+              ),
+              title: Text(
+                todo.title,
+                style: AppTheme.titleMedium.copyWith(
+                  decoration:
+                      todo.isCompleted ? TextDecoration.lineThrough : null,
+                ),
+              ),
+              subtitle: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    todo.description,
+                    style: AppTheme.bodyMedium,
+                  ),
+                  const SizedBox(height: 4),
+                  Container(
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                    decoration: BoxDecoration(
+                      color: todo.priority.color.withAlpha(26),
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: Text(
+                      todo.priority.label,
+                      style: AppTheme.labelSmall.copyWith(
+                        color: todo.priority.color,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              trailing: IconButton(
+                icon: const Icon(Icons.delete, color: Colors.red),
+                onPressed: onDelete,
+              ),
             ),
           ),
         ),
