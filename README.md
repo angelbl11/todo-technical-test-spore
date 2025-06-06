@@ -106,6 +106,18 @@ Para generar los archivos de código necesarios, ejecuta:
 flutter pub run build_runner build --delete-conflicting-outputs
 ```
 
+Para ejecutar los tests de la aplicación, puedes usar:
+
+```bash
+make test
+```
+
+O directamente con Flutter:
+
+```bash
+flutter test
+```
+
 ## 📱 Características
 
 - Crear, leer, actualizar y eliminar tareas

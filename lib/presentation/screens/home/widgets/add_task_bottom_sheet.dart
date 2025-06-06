@@ -3,6 +3,10 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:todo_list_technical_test/core/theme/app_theme.dart';
 import 'package:todo_list_technical_test/presentation/providers/priority.dart';
 import 'package:todo_list_technical_test/presentation/providers/todo_provider.dart';
+import 'package:todo_list_technical_test/presentation/widgets/form_fields/description_field.dart';
+import 'package:todo_list_technical_test/presentation/widgets/form_fields/due_date_field.dart';
+import 'package:todo_list_technical_test/presentation/widgets/form_fields/priority_field.dart';
+import 'package:todo_list_technical_test/presentation/widgets/form_fields/title_field.dart';
 
 class AddTaskBottomSheet extends ConsumerStatefulWidget {
   const AddTaskBottomSheet({super.key});
@@ -23,20 +27,6 @@ class _AddTaskBottomSheetState extends ConsumerState<AddTaskBottomSheet> {
     _titleController.dispose();
     _descriptionController.dispose();
     super.dispose();
-  }
-
-  Future<void> _selectDate(BuildContext context) async {
-    final DateTime? picked = await showDatePicker(
-      context: context,
-      initialDate: _dueDate,
-      firstDate: DateTime.now(),
-      lastDate: DateTime.now().add(const Duration(days: 365)),
-    );
-    if (picked != null && picked != _dueDate) {
-      setState(() {
-        _dueDate = picked;
-      });
-    }
   }
 
   void _saveTask() {
@@ -96,14 +86,8 @@ class _AddTaskBottomSheetState extends ConsumerState<AddTaskBottomSheet> {
               child: ListView(
                 padding: const EdgeInsets.all(16),
                 children: [
-                  TextFormField(
+                  TitleField(
                     controller: _titleController,
-                    decoration: InputDecoration(
-                      labelText: 'Título',
-                      border: const OutlineInputBorder(),
-                      labelStyle:
-                          TextStyle(color: colorScheme.onSurfaceVariant),
-                    ),
                     validator: (value) {
                       if (value == null || value.isEmpty) {
                         return 'Por favor ingresa un título';
@@ -112,78 +96,33 @@ class _AddTaskBottomSheetState extends ConsumerState<AddTaskBottomSheet> {
                     },
                   ),
                   const SizedBox(height: 16),
-                  TextFormField(
+                  DescriptionField(
                     controller: _descriptionController,
-                    decoration: InputDecoration(
-                      labelText: 'Descripción',
-                      border: const OutlineInputBorder(),
-                      labelStyle:
-                          TextStyle(color: colorScheme.onSurfaceVariant),
-                    ),
-                    maxLines: 3,
                     validator: (value) {
                       if (value == null || value.isEmpty) {
                         return 'Por favor ingresa una descripción';
                       }
                       return null;
                     },
+                    enableVoiceInput: true,
                   ),
                   const SizedBox(height: 16),
-                  DropdownButtonFormField<Priority>(
-                    value: _priority,
-                    decoration: InputDecoration(
-                      labelText: 'Prioridad',
-                      border: const OutlineInputBorder(),
-                      labelStyle:
-                          TextStyle(color: colorScheme.onSurfaceVariant),
-                    ),
-                    items: Priority.values.map((Priority priority) {
-                      return DropdownMenuItem<Priority>(
-                        value: priority,
-                        child: Row(
-                          children: [
-                            Container(
-                              width: 12,
-                              height: 12,
-                              decoration: BoxDecoration(
-                                color: priority.color,
-                                shape: BoxShape.circle,
-                              ),
-                            ),
-                            const SizedBox(width: 8),
-                            Text(
-                              priority.label,
-                              style: AppTheme.bodyMedium,
-                            ),
-                          ],
-                        ),
-                      );
-                    }).toList(),
-                    onChanged: (Priority? newValue) {
-                      if (newValue != null) {
-                        setState(() {
-                          _priority = newValue;
-                        });
-                      }
+                  PriorityField(
+                    initialValue: _priority,
+                    onChanged: (value) {
+                      setState(() {
+                        _priority = value;
+                      });
                     },
                   ),
                   const SizedBox(height: 16),
-                  ListTile(
-                    title: Text(
-                      'Fecha de vencimiento',
-                      style: AppTheme.titleMedium.copyWith(
-                        color: colorScheme.onSurface,
-                      ),
-                    ),
-                    subtitle: Text(
-                      '${_dueDate.day}/${_dueDate.month}/${_dueDate.year}',
-                      style: AppTheme.bodyMedium.copyWith(
-                        color: colorScheme.onSurfaceVariant,
-                      ),
-                    ),
-                    trailing:
-                        Icon(Icons.calendar_today, color: colorScheme.primary),
-                    onTap: () => _selectDate(context),
+                  DueDateField(
+                    initialDate: _dueDate,
+                    onChanged: (value) {
+                      setState(() {
+                        _dueDate = value;
+                      });
+                    },
                   ),
                   const SizedBox(height: 24),
                   ElevatedButton(
